@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Spline from "@splinetool/react-spline";
 
 const App = () => {
   const [question, setQuestion] = useState("");
@@ -17,7 +18,6 @@ const App = () => {
     try {
       const response = await axios({
         url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAh_h4H4QulOuo50JyQ2lIOqXYouK9niME",
-
         method: "post",
         data: {
           contents: [
@@ -34,8 +34,6 @@ const App = () => {
           }
         }
       });
-
-      console.log("API response:", response.data); // Debug log
 
       const answer =
         response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No valid answer received.";
@@ -56,32 +54,41 @@ const App = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-100 to-purple-200 font-sans">
-      <header className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 text-center text-3xl font-bold shadow-md">
-        MY-AI 
+    <div className="relative flex flex-col h-screen font-sans">
+
+      {/* Spline 3D Background */}
+      <div className="absolute inset-0 -z-10">
+        <Spline scene="https://prod.spline.design/zGng0NWVH9a9sAVg/scene.splinecode" />
+      </div>
+
+      {/* Header */}
+      <header className="bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white p-4 text-center text-3xl font-bold shadow-md backdrop-blur-md">
+        MY-AI
       </header>
 
+      {/* Messages */}
       <main className="flex-grow overflow-auto p-4 space-y-4">
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`max-w-2xl px-4 py-3 rounded-xl shadow-md whitespace-pre-wrap transition duration-300 ${
+            className={`max-w-2xl px-4 py-3 rounded-xl shadow-md whitespace-pre-wrap transition duration-300 backdrop-blur-sm ${
               msg.type === "user"
-                ? "bg-blue-500 text-white self-end ml-auto"
-                : "bg-white text-gray-800 self-start mr-auto"
+                ? "bg-blue-500/80 text-white self-end ml-auto"
+                : "bg-white/80 text-gray-800 self-start mr-auto"
             }`}
           >
             {msg.text}
           </div>
         ))}
         {loading && (
-          <div className="max-w-2xl px-4 py-3 rounded-xl bg-yellow-100 text-yellow-800 self-start mr-auto animate-pulse">
+          <div className="max-w-2xl px-4 py-3 rounded-xl bg-yellow-100/80 text-yellow-800 self-start mr-auto animate-pulse backdrop-blur-sm">
             Thinking...
           </div>
         )}
       </main>
 
-      <footer className="p-4 bg-white flex items-center gap-2 shadow-inner">
+      {/* Input */}
+      <footer className="p-4 bg-white/80 backdrop-blur-md flex items-center gap-2 shadow-inner">
         <textarea
           className="flex-grow border-2 border-purple-400 rounded-lg p-3 resize-none h-16 focus:outline-none focus:ring-2 focus:ring-purple-500"
           placeholder="Type your question..."
